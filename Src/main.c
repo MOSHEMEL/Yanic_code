@@ -1285,56 +1285,10 @@ char CheckUartBuffer(void)
 
 char CheckApplicator(void)
 { 
-	// AT25SF081 ,ADESTO
-	
-	// for now check it by Device Id only
-	char IsDeviceIdEqual = 0;
-	ChipSelect(ChipSelectNumber, HIGH);
-	HAL_Delay(150);  //worked also with 10ms but need to verifay
-	ChipSelectNumber = CS_Applicator; 
-	//			HAL_GPIO_WritePin(CS2_LOW);
-				ChipSelect(ChipSelectNumber, LOW);
-	HAL_Delay(2);                          //  ID 1F-85-01-00
-	SpiDataWrite[0] = 0x9F;  //get device ID // adruino code id BF-25-8E
-		
-	HAL_SPI_Transmit(&hspi1, SpiDataWrite, 1, 500);
-	HAL_SPI_Receive(&hspi1, SpiDataRead, 3, 1000);
-		
-	//HAL_GPIO_WritePin(CS2_HIGH);
-			ChipSelect(ChipSelectNumber, HIGH);
- 
-	// set device id
-			Device_Id[0] = 0x1F;
-	Device_Id[1] = 0x85;
-	Device_Id[2] = 0x01;
-	// IsDeviceIdEqual=memcmp(&SpiDataRead[0],&Device_Id[0],2); // not working check later
-	if((Device_Id[0] == SpiDataRead[0]) &&  (Device_Id[1] == SpiDataRead[1]) && (Device_Id[2] == SpiDataRead[2]))
-	{
-		IsDeviceIdEqual = 1;
-	}
-
-	/*
-			sprintf(aTxBuffer,"\r\n\r\n IsDeviceIdEqual [%d]\r\n",IsDeviceIdEqual);
-				 if(HAL_UART_Transmit(&huart4, (uint8_t*)aTxBuffer, strlen((char*)aTxBuffer), 5000)!= HAL_OK)
-			{
-				Error_Handler();   
-			}
-	
-	
-			sprintf(aTxBuffer,"\r\n\r\n IsDeviceIdEqual [%d] Device id %02X-%02X-%02X-%02X\r\n ",IsDeviceIdEqual , Device_Id[0] , Device_Id[1] ,Device_Id[2],Device_Id[3]);
-				 if(HAL_UART_Transmit(&huart4, (uint8_t*)aTxBuffer, strlen((char*)aTxBuffer), 5000)!= HAL_OK)
-			{
-				Error_Handler();   
-			}
-	
-			sprintf(aTxBuffer,"\r\n\r\nCS[%d] Device id %02X-%02X-%02X-%02X\r\n",CS_Applicator , SpiDataRead[0] , SpiDataRead[1] ,SpiDataRead[2],SpiDataRead[3]);
-				 if(HAL_UART_Transmit(&huart4, (uint8_t*)aTxBuffer, strlen((char*)aTxBuffer), 5000)!= HAL_OK)
-			{
-				Error_Handler();   
-			}
-			*/
-	ChipSelect(ChipSelectNumber, HIGH);
-	// check Applicator - end
+	char str[20];
+	char IsDeviceIdEqual = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6);
+	sprintf(str, "MIC : %d\r\n", MIC_INPUT);	
+	HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);
 	return(IsDeviceIdEqual);
 }
 /* USER CODE END 0 */
@@ -1345,7 +1299,6 @@ char CheckApplicator(void)
   */
 int main(void)
 {
-	
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -2342,8 +2295,6 @@ ChipSelect(ChipSelectNumber, LOW);
 			HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);			
 			
 			
-			sprintf(str, "MIC : %d\r\n", MIC_INPUT);	
-			HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);			
 			
 			sprintf(str, "ADC[pressure] : %d\r\n", adc[1]);	
 			HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);	
@@ -2858,7 +2809,6 @@ if (Tret == 1)
 
 
 		
-} // end while
 	
 // ************************************************************************
 // End while / program
@@ -2867,7 +2817,7 @@ if (Tret == 1)
 	
 	
   /* USER CODE END 3 */
-
+}
 
 /**
   * @brief System Clock Configuration
@@ -3477,4 +3427,3 @@ void assert_failed(char *file, uint32_t line)
 }
 #endif /* USE_FULL_ASSERT */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
