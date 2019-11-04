@@ -60,6 +60,10 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define mic_Pin GPIO_PIN_6
+#define mic_GPIO_Port GPIOA
+#define mic_EXTI_IRQn EXTI4_15_IRQn
+/* USER CODE BEGIN Private defines */
 #define Btm_Counter_Pin GPIO_PIN_13
 #define Btm_Counter_GPIO_Port GPIOC
 #define ADC_GAS_Pin GPIO_PIN_0
@@ -113,9 +117,7 @@ void Error_Handler(void);
 #define CS3_GPIO_Port GPIOB
 #define CS4_Pin GPIO_PIN_9
 #define CS4_GPIO_Port GPIOB
-float ewma_bat(float new_batt);
-/* USER CODE BEGIN Private defines */
-
+	float ewma_bat(float new_batt);
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

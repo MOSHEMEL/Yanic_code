@@ -275,6 +275,8 @@ float PTuser, TempHeatSink2, TempHeatSink1, Tin, TempHeatSink3, TempHeatSink3, T
 uint8_t Menual = 0;
 uint8_t Mode = 0;
 
+int MIC_INPUT = 0;
+
 double diff_t;
 RTC_TimeTypeDef sTime1, sTime2;
 RTC_DateTypeDef sDate1;
@@ -1343,41 +1345,39 @@ char CheckApplicator(void)
   */
 int main(void)
 {
+	
+  /* USER CODE BEGIN 1 */
 
-	/* USER CODE BEGIN 1 */
-
-	/* USER CODE END 1 */
+  /* USER CODE END 1 */
   
 
-	/* MCU Configuration--------------------------------------------------------*/
+  /* MCU Configuration--------------------------------------------------------*/
 
-	/* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-	HAL_Init();
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
 
-	/* USER CODE BEGIN Init */
+  /* USER CODE BEGIN Init */
 
-	/* USER CODE END Init */
+  /* USER CODE END Init */
 
-	/* Configure the system clock */
-	SystemClock_Config();
+  /* Configure the system clock */
+  SystemClock_Config();
 
-	/* USER CODE BEGIN SysInit */
+  /* USER CODE BEGIN SysInit */
 
-	/* USER CODE END SysInit */
+  /* USER CODE END SysInit */
 
-	/* Initialize all configured peripherals */
-	MX_GPIO_Init();
-	MX_ADC_Init();
-
-	MX_RTC_Init();
-	MX_SPI1_Init();
-	MX_TIM2_Init();
-	MX_TIM3_Init();
-	MX_TIM15_Init();
-
-	MX_USART1_UART_Init();
-	MX_USART4_UART_Init();
-	/* USER CODE BEGIN 2 */
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_ADC_Init();
+  MX_RTC_Init();
+  MX_SPI1_Init();
+  MX_TIM2_Init();
+  MX_TIM3_Init();
+  MX_TIM15_Init();
+  MX_USART1_UART_Init();
+  MX_USART4_UART_Init();
+  /* USER CODE BEGIN 2 */
 	BuzzerBip(START_BEEP);
 	int i = 0;
 	char key1, key2, key3, aShowTime[100];
@@ -1528,11 +1528,11 @@ HAL_Delay(500);
 
 	i = 400;
 
-	/* USER CODE END 2 */
+  /* USER CODE END 2 */
 
-	/* Infinite loop */
-	/* USER CODE BEGIN WHILE */
-	
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+ 	
 	c1 = CheckUartBuffer();
 	rx4_counter = 0;
 	
@@ -2340,6 +2340,13 @@ ChipSelect(ChipSelectNumber, LOW);
 		
 			sprintf(str, "$t%3.0f#\r\n", ApplicatorCounterPercent);	
 			HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);			
+			
+			
+			sprintf(str, "MIC : %d\r\n", MIC_INPUT);	
+			HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);			
+			
+			sprintf(str, "ADC[pressure] : %d\r\n", adc[1]);	
+			HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);	
 			if ((c % 100) == 0)  
 			{		
 				//	sprintf(str,"$b%d#",adc[ADC_Battery]);
@@ -2579,284 +2586,288 @@ Counter = 0;
 			temp_memory = MemoryCounter[CS_Applicator];
 			ReadFromMemoryCounter(CS_Applicator);
 
+ 
+	while (1)
+  {
+    /* USER CODE END WHILE */
 
-			while (1)
-			{
-				sprintf(str, "$F0#\r\n");  	//pulse remaining 0
-				HAL_UART_Transmit(&huart1, (uint8_t*)str, strlen(str), 50);
-				HAL_Delay(10000);
-			}
-		}
+    /* USER CODE BEGIN 3 */
+  }
+		sprintf(str, "$F0#\r\n");  	//pulse remaining 0
+HAL_UART_Transmit(&huart1, (uint8_t*)str, strlen(str), 50);
+		HAL_Delay(10000);
+	}
+}
 			
 
 
 		
-		Btm_Reset = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13);
-		if (0)    //  Btm_Reset==1     
-			{
+Btm_Reset = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13);
+if (0)    //  Btm_Reset==1     
+	{
 						
-				HAL_Delay(15);
+		HAL_Delay(15);
+		Btm_Reset = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13);
+		if (Btm_Reset == 1)       // for debauncing
+			{
+				BuzzerBip(KEY_PRESS);
+				if (PulseCouterDir == 0) {	IsBeep400 = 0; PulseCouterDir = 1; PulseCouter = 400; }
+				else if (PulseCouterDir == 1) {IsBeep400 = 0; PulseCouterDir = 0; PulseCouter = 0; }
+						
+
+						
+				sprintf(aTxBuffer, "\r\n **** Btn reset preesed ***\r\n");
+				HAL_UART_Transmit(&huart4, (uint8_t*)aTxBuffer, strlen((char*)aTxBuffer), 50);
+						
 				Btm_Reset = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13);
 				if (Btm_Reset == 1)       // for debauncing
 					{
-						BuzzerBip(KEY_PRESS);
-						if (PulseCouterDir == 0) {	IsBeep400 = 0; PulseCouterDir = 1; PulseCouter = 400; }
-						else if (PulseCouterDir == 1) {IsBeep400 = 0; PulseCouterDir = 0; PulseCouter = 0; }
-						
-
-						
-						sprintf(aTxBuffer, "\r\n **** Btn reset preesed ***\r\n");
-						HAL_UART_Transmit(&huart4, (uint8_t*)aTxBuffer, strlen((char*)aTxBuffer), 50);
-						
-						Btm_Reset = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13);
-						if (Btm_Reset == 1)       // for debauncing
-							{
-								HAL_Delay(150);
-							}
-						Btm_Reset = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13);
-						if (Btm_Reset == 1)       // for debauncing
-							{
-								HAL_Delay(550);
-							}
-							 
+						HAL_Delay(150);
 					}
+				Btm_Reset = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13);
+				if (Btm_Reset == 1)       // for debauncing
+					{
+						HAL_Delay(550);
+					}
+							 
 			}
+	}
 		
-		// **** Start  button motor pressed	/ Btn Fire_Switch preesed		
+// **** Start  button motor pressed	/ Btn Fire_Switch preesed		
+Btm_SW = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+if (Btm_SW == 1)
+{
+
+	HAL_Delay(15);
+	Btm_SW = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+	if (Btm_SW == 1)
+	{	
+		BuzzerBip(KEY_PRESS);
+				
+		sprintf(aTxBuffer, "\r\n **** Btn Fire_Switch preesed ***\r\n");
+		HAL_UART_Transmit(&huart4, (uint8_t*)aTxBuffer, strlen((char*)aTxBuffer), 50);
+	
+			
+		//	BtmFireCounterPressed++;
+			
+	//		if (BtmFireCounterPressed >=5)
+			
+				//IgnoreButtonDelay++;
+				if(MotorRun == 0)
+		{
+					
+
+			//	ReadFromMemoryCounter(CS_Applicator);
+				// check memory counter
+//   sprintf(aTxBuffer,"\r\n >>> \r\n t,m[%ld] mc[%ld] mc-temp_memory[%ld] \r\n",MsCounter,MemoryCounter[CS_Applicator],( MemoryCounter[CS_Applicator]-MsCounter)  );
+ //   HAL_UART_Transmit(&huart4, (uint8_t*)aTxBuffer, strlen((char*)aTxBuffer), 50);
+			MsCounter = 0;
+			sprintf(str, "\r\nStart  motor write to %ld\r\n", MsCounter);
+			HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);	
+			//	if (MemoryCounter[CS_Applicator]>0)
+			//	{
+					
+					
+			// checks of mandatories parameters to run motor .
+					
+					
+					
+					
+					
+			if(CheckApplicator() == 1) 
+			{	
+
+				if (adc[ADC_Presure] >= ADC_Presure_27_bar)
+				{
+					MotorCommand(1);
+					MotorRun = 1;
+				}
+			}
+			else 
+			{
+				sprintf(str, "$zAM Disconnected#\r\n");
+				HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 50);	
+			}	
+			//	}
+						
+		//	HAL_Delay(800);
+		}
+		else
+		{
+					
+			// CLOSE MOTOR  OFF
+					
+			MotorCommand(0);	
+			MotorRun = 0;
+			HAL_Delay(50);
+				
+			MemoryCounter[CS_Applicator] = MsCounter;
+			MemoryCounter[CS_Router] = MsCounter;
+			MemoryCounter[CS_Mcu] = MsCounter;
+					
+			sprintf(str, "\r\nclose  motor write to %ld\r\n", MsCounter);
+			HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);
+	
+					
+			// need to check memory compare 
+		   // check memory is not negativ
+		   if((MemoryCounter[CS_Applicator] - MsCounter) < 0)
+			{
+				MemoryCounter[CS_Applicator] = 0;
+			}
+					
+			ReadFromMemoryCounter(CS_Applicator);
+			MemoryCounter[CS_Applicator] = MemoryCounter[CS_Applicator] - MsCounter;
+			sprintf(str, "\r\write to  memory \r\n");
+			HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);
+			temp_memory2 = MemoryCounter[CS_Applicator];  // save memory before write for compare
+					
+			WriteToMemoryCounter(CS_Applicator, MemoryCounter[CS_Applicator]);
+			WriteToMemoryCounter(CS_Router, MemoryCounter[CS_Router]);
+			WriteToMemoryCounter(CS_Mcu, MemoryCounter[CS_Mcu]);
+			sprintf(str, "\r\Read from  memory \r\n");
+			HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);
+					
+			ReadFromMemoryCounter(CS_Applicator);
+					
+			if (Compare(MemoryCounter[CS_Applicator], temp_memory2) == 0)
+			{
+				sprintf(aTxBuffer, "\r\n ****Faild compare CS_Applicator ****\r\n");
+				HAL_UART_Transmit(&huart4, (uint8_t*)aTxBuffer, strlen((char*)aTxBuffer), 50);
+				MemoryCounter[CS_Applicator] = temp_memory2;
+				WriteToMemoryCounter(CS_Applicator, MemoryCounter[CS_Applicator]);
+				WriteToMemoryCounter(CS_Router, MemoryCounter[CS_Router]);
+				WriteToMemoryCounter(CS_Mcu, MemoryCounter[CS_Mcu]);
+									
+				ReadFromMemoryCounter(CS_Applicator);
+			}
+					
+			temp_memory = MemoryCounter[CS_Applicator];  // save last  total memory value
+			  MsCounter = 0;
+					
+					
+
+					
+			// set memory
+
+		//	HAL_Delay(800);
+		}
+
+		//	BtmFireCounterPressed=0;
+				
+			
+			
+			Btm_SW = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+		if (Btm_SW == 1)
+		{
+			HAL_Delay(250);
+		}
+			
+			
 		Btm_SW = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
 		if (Btm_SW == 1)
 		{
-
-			HAL_Delay(15);
-			Btm_SW = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
-			if (Btm_SW == 1)
-			{	
-				BuzzerBip(KEY_PRESS);
-				
-				sprintf(aTxBuffer, "\r\n **** Btn Fire_Switch preesed ***\r\n");
-				HAL_UART_Transmit(&huart4, (uint8_t*)aTxBuffer, strlen((char*)aTxBuffer), 50);
-	
-			
-				//	BtmFireCounterPressed++;
-			
-			//		if (BtmFireCounterPressed >=5)
-			
-						//IgnoreButtonDelay++;
-						if(MotorRun == 0)
-				{
-					
-
-					//	ReadFromMemoryCounter(CS_Applicator);
-						// check memory counter
-				//   sprintf(aTxBuffer,"\r\n >>> \r\n t,m[%ld] mc[%ld] mc-temp_memory[%ld] \r\n",MsCounter,MemoryCounter[CS_Applicator],( MemoryCounter[CS_Applicator]-MsCounter)  );
-				 //   HAL_UART_Transmit(&huart4, (uint8_t*)aTxBuffer, strlen((char*)aTxBuffer), 50);
-							MsCounter = 0;
-					sprintf(str, "\r\nStart  motor write to %ld\r\n", MsCounter);
-					HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);	
-					//	if (MemoryCounter[CS_Applicator]>0)
-					//	{
-					
-					
-					// checks of mandatories parameters to run motor .
-					
-					
-					
-					
-					
-					if(CheckApplicator() == 1) 
-					{	
-
-						if (adc[ADC_Presure] >= ADC_Presure_27_bar)
-						{
-							MotorCommand(1);
-							MotorRun = 1;
-						}
-					}
-					else 
-					{
-						sprintf(str, "$zAM Disconnected#\r\n");
-						HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 50);	
-					}	
-					//	}
-						
-				//	HAL_Delay(800);
-				}
-				else
-				{
-					
-					// CLOSE MOTOR  OFF
-					
-					MotorCommand(0);	
-					MotorRun = 0;
-					HAL_Delay(50);
-				
-					MemoryCounter[CS_Applicator] = MsCounter;
-					MemoryCounter[CS_Router] = MsCounter;
-					MemoryCounter[CS_Mcu] = MsCounter;
-					
-					sprintf(str, "\r\nclose  motor write to %ld\r\n", MsCounter);
-					HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);
-	
-					
-					// need to check memory compare 
-				   // check memory is not negativ
-				   if((MemoryCounter[CS_Applicator] - MsCounter) < 0)
-					{
-						MemoryCounter[CS_Applicator] = 0;
-					}
-					
-					ReadFromMemoryCounter(CS_Applicator);
-					MemoryCounter[CS_Applicator] = MemoryCounter[CS_Applicator] - MsCounter;
-					sprintf(str, "\r\write to  memory \r\n");
-					HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);
-					temp_memory2 = MemoryCounter[CS_Applicator];  // save memory before write for compare
-					
-					WriteToMemoryCounter(CS_Applicator, MemoryCounter[CS_Applicator]);
-					WriteToMemoryCounter(CS_Router, MemoryCounter[CS_Router]);
-					WriteToMemoryCounter(CS_Mcu, MemoryCounter[CS_Mcu]);
-					sprintf(str, "\r\Read from  memory \r\n");
-					HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);
-					
-					ReadFromMemoryCounter(CS_Applicator);
-					
-					if (Compare(MemoryCounter[CS_Applicator], temp_memory2) == 0)
-					{
-						sprintf(aTxBuffer, "\r\n ****Faild compare CS_Applicator ****\r\n");
-						HAL_UART_Transmit(&huart4, (uint8_t*)aTxBuffer, strlen((char*)aTxBuffer), 50);
-						MemoryCounter[CS_Applicator] = temp_memory2;
-						WriteToMemoryCounter(CS_Applicator, MemoryCounter[CS_Applicator]);
-						WriteToMemoryCounter(CS_Router, MemoryCounter[CS_Router]);
-						WriteToMemoryCounter(CS_Mcu, MemoryCounter[CS_Mcu]);
-									
-						ReadFromMemoryCounter(CS_Applicator);
-					}
-					
-					temp_memory = MemoryCounter[CS_Applicator];  // save last  total memory value
-					  MsCounter = 0;
-					
-					
-
-					
-					// set memory
-
-	//	HAL_Delay(800);
-				}
-
-				//	BtmFireCounterPressed=0;
-				
-			
-			
-					Btm_SW = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
-				if (Btm_SW == 1)
-				{
-					HAL_Delay(250);
-				}
-			
-			
-				Btm_SW = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
-				if (Btm_SW == 1)
-				{
-					HAL_Delay(250);
-				}
-			
-			
-				//  sprintf(aTxBuffer,"\r\n  Btm_SW \r\n");
-					//	HAL_UART_Transmit(&huart4, (uint8_t*)aTxBuffer, strlen((char*)aTxBuffer), 500);
-			}
-		}  // end button motor pressed
-		else
-		{
-			//   sprintf(aTxBuffer,"\r\n not Btm_SW \r\n");
-			  //	HAL_UART_Transmit(&huart4, (uint8_t*)aTxBuffer, strlen((char*)aTxBuffer), 500);
-
+			HAL_Delay(250);
 		}
-		CheckUartBuffer();
-		
-		if (PulseCouterDir == 0) // count up
-			{
 			
-				if (PulseCouter > 0)
-				{
-					if ((PulseCouter % 200) == 0)
-					{
-						BuzzerBip(BEEP_COUNTER_200);
-					}
-				}		
+			
+		//  sprintf(aTxBuffer,"\r\n  Btm_SW \r\n");
+			//	HAL_UART_Transmit(&huart4, (uint8_t*)aTxBuffer, strlen((char*)aTxBuffer), 500);
+	}
+}  // end button motor pressed
+else
+{
+	//   sprintf(aTxBuffer,"\r\n not Btm_SW \r\n");
+	  //	HAL_UART_Transmit(&huart4, (uint8_t*)aTxBuffer, strlen((char*)aTxBuffer), 500);
+
+}
+CheckUartBuffer();
+		
+if (PulseCouterDir == 0) // count up
+	{
+			
+		if (PulseCouter > 0)
+		{
+			if ((PulseCouter % 200) == 0)
+			{
+				BuzzerBip(BEEP_COUNTER_200);
 			}
+		}		
+	}
 	
 			
-		if (PulseCouterDir == 1) // count down
+if (PulseCouterDir == 1) // count down
 		
+	{
+		if (PulseCouter < 400)
+		{
+			if ((PulseCouter != 0) &&  ((PulseCouter % 200) == 0))
 			{
-				if (PulseCouter < 400)
-				{
-					if ((PulseCouter != 0) &&  ((PulseCouter % 200) == 0))
-					{
-						BuzzerBip(BEEP_COUNTER_200);
-					}
+				BuzzerBip(BEEP_COUNTER_200);
+			}
 									
-					else  if (PulseCouter <= 0)
-					{
+			else  if (PulseCouter <= 0)
+			{
 									
 										
-						if (MotorRun == 1)
-						{
-							// close motor
-							MotorCommand(0);	
-							MotorRun = 0;
-							BuzzerBip(BEEP_COUNTER_200);	
-							PulseCouterDir = 0;
-						}
+				if (MotorRun == 1)
+				{
+					// close motor
+					MotorCommand(0);	
+					MotorRun = 0;
+					BuzzerBip(BEEP_COUNTER_200);	
+					PulseCouterDir = 0;
+				}
 											
-					}
+			}
 			
 									
-				}		
-			}
+		}		
+	}
 				
 	
 
 
 	
 	
-		if ((c % 10) == 0)
-		{
-			//	sprintf(str,"$%d#",PulseCouter);
+if ((c % 10) == 0)
+{
+	//	sprintf(str,"$%d#",PulseCouter);
 		
 		
-				HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_4);
-			//HAL_UART_Transmit(&huart4,(uint8_t *)str,strlen(str),100);
-			//HAL_UART_Transmit(&huart4,(uint8_t *)str,strlen(str),100);
-		}
-		HAL_Delay(10);	
+		HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_4);
+	//HAL_UART_Transmit(&huart4,(uint8_t *)str,strlen(str),100);
+	//HAL_UART_Transmit(&huart4,(uint8_t *)str,strlen(str),100);
+}
+HAL_Delay(10);	
 	
-		if (Tret == 1)
-		{
-			if (PulseCouter >= 10)
-			{
-				Tret = 0;
-				sprintf(aTxBuffer, "\r\n --- Stop Cycle [motor stop] \r\n  ");
-				HAL_UART_Transmit(&huart4, (uint8_t*)aTxBuffer, strlen((char*)aTxBuffer), 500);
-				HAL_Delay(10);
-				MotorCommand(0);
-				//__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_2, MOTOR_1_PWM_OFF); // start motor
+if (Tret == 1)
+{
+	if (PulseCouter >= 10)
+	{
+		Tret = 0;
+		sprintf(aTxBuffer, "\r\n --- Stop Cycle [motor stop] \r\n  ");
+		HAL_UART_Transmit(&huart4, (uint8_t*)aTxBuffer, strlen((char*)aTxBuffer), 500);
+		HAL_Delay(10);
+		MotorCommand(0);
+		//__HAL_TIM_SET_COMPARE(&htim15, TIM_CHANNEL_2, MOTOR_1_PWM_OFF); // start motor
 
-			}
-		}
+	}
+}
 
 
 
 		
-	} // end while
+} // end while
 	
-	// ************************************************************************
-	// End while / program
-	// ************************************************************************
+// ************************************************************************
+// End while / program
+// ************************************************************************
 
 	
 	
   /* USER CODE END 3 */
-}
+
 
 /**
   * @brief System Clock Configuration

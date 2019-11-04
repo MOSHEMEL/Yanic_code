@@ -57,6 +57,7 @@ extern char PulseCouterDir;
 extern int IsPulseFinshed;
 extern long MsCounter;
 extern int PiazoCouter;
+extern int MIC_INPUT;
 extern char EnablePulseCouter;
 
 // uart vars
@@ -185,6 +186,10 @@ void EXTI2_3_IRQHandler(void)
 void EXTI4_15_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI4_15_IRQn 0 */
+	if (__HAL_GPIO_EXTI_GET_FLAG(GPIO_PIN_6))
+	{
+				MIC_INPUT++;     
+	}
  if(__HAL_GPIO_EXTI_GET_FLAG(GPIO_PIN_11) )
   {
         //do do something here
@@ -231,6 +236,7 @@ if ( EnablePulseCouter==1)
 			}	
     }
   /* USER CODE END EXTI4_15_IRQn 0 */
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_6);
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12);
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_14);
