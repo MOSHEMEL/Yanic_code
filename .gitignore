@@ -2,3 +2,13 @@ Drivers/
 MDK-ARM/
 EWARM/
 .vs/
+VisualGDB/
+yaniv_v1.sln
+yaniv_v1.vcxproj.filters
+yaniv_v1.vcxproj
+yaniv_v1.vcxproj.user
+yaniv_v1-Debug.vgdbsettings
+yaniv_v1-Release.vgdbsettings
+.mxproject
+stm32.props
+stm32.xml
