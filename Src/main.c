@@ -2146,11 +2146,11 @@ ChipSelect(ChipSelectNumber, LOW);
 	
 
 	//	sprintf(str,"$b%d#",adc[ADC_Battery]);
-		sprintf(str, "$t%d#", (int)ApplicatorCounterPercent);	
+		sprintf(str, "$t%d#\r\n", (int)ApplicatorCounterPercent);	
 	HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 50);	
 	HAL_Delay(100);
 			
-	sprintf(str, "$t%d#", (int)ApplicatorCounterPercent);	
+	sprintf(str, "$t%d#\r\n", (int)ApplicatorCounterPercent);	
 	HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);	
 	HAL_Delay(100);
 			
@@ -2190,7 +2190,7 @@ ChipSelect(ChipSelectNumber, LOW);
 	BatteryB = 24.86;
 	//		sprintf(aTxBuffer,"\r\nADC Presure %d  Battery %d", adc[0], adc[1] );
 	  BatteryPercent = ewma_bat(BatteryA*adc[ADC_Battery] - BatteryB);	
-	sprintf(str, "$b%3.0f#", BatteryPercent);	
+	sprintf(str, "$b%d#\r\n", (int )BatteryPercent);	
 	HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 50);					
 
 					
@@ -2246,7 +2246,7 @@ ChipSelect(ChipSelectNumber, LOW);
 */
 // CheckApplicator() end 
 //*** write  to lcd start ***
-	sprintf(str, "$c%d#", PulseCouter);
+	sprintf(str, "$c%d#\r\n", PulseCouter);
 			//	HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_4);
 				//HAL_UART_Transmit(&huart4,(uint8_t *)str,strlen(str),100);
 				HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 50);
@@ -2293,11 +2293,11 @@ ChipSelect(ChipSelectNumber, LOW);
 						
 					 if(adc[ADC_Presure] >= ADC_Presure_27_bar)  // presure to low
 				{
-					sprintf(str, "$pO.K#");  // o.k
+					sprintf(str, "$pO.K#\r\n");   // o.k
 				}
 				else
 				{
-					sprintf(str, "$pLOW#");  // low
+					sprintf(str, "$pLOW#\r\n");   // low
 							MotorCommand(0);
 					MotorRun = 0;
 						
@@ -2307,9 +2307,12 @@ ChipSelect(ChipSelectNumber, LOW);
 			//	HAL_UART_Transmit(&huart4,(uint8_t *)str,strlen(str),100);
 
 			   HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 50);			
+				HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);					
 
-				sprintf(str, "$b%3.0f#", BatteryPercent);	
-				HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 50);					
+				sprintf(str, "$b%d#\r\n", (int)BatteryPercent);	
+				HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 50);
+				HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);					
+
 			}				
 					
 				
@@ -2330,17 +2333,17 @@ ChipSelect(ChipSelectNumber, LOW);
 			
 				if (((temp_memory - MsCounter) % 200) == 0)
 				{
-					sprintf(str, "$F%d#", (temp_memory - MsCounter)); 	//pulse remaining 0
+					sprintf(str, "$F%d#\r\n", (temp_memory - MsCounter));  	//pulse remaining 0
 					HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 50);
 				}
 			}
 		
-			sprintf(str, "$t%3.0f#", ApplicatorCounterPercent);	
+			sprintf(str, "$t%3.0f#\r\n", ApplicatorCounterPercent);	
 			HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);			
 			if ((c % 100) == 0)  
 			{		
 				//	sprintf(str,"$b%d#",adc[ADC_Battery]);
-					sprintf(str, "$t%d#", (int)ApplicatorCounterPercent);	
+					sprintf(str, "$t%d#\r\n", (int)ApplicatorCounterPercent);	
 				HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 50);			
 			}			
 
@@ -2355,7 +2358,7 @@ ChipSelect(ChipSelectNumber, LOW);
 									if(PiazoCouter >= 1)
 					{
 						//	sprintf(str,"$b%d#",adc[ADC_Battery]);
-							sprintf(str, "$ay#");
+							sprintf(str, "$ay#\r\n");
 									
 					}
 					else
@@ -2367,7 +2370,7 @@ ChipSelect(ChipSelectNumber, LOW);
 						//hal_delay(2000);
 						//sprintf(str, "$R#");
 						//HAL_UART_Transmit(&huart1, (uint8_t*)str, strlen(str), 50);
-						sprintf(str, "$an#");
+						sprintf(str, "$an#\r\n");
 
 					}
 					PiazoCouter = 0;
@@ -2380,7 +2383,7 @@ ChipSelect(ChipSelectNumber, LOW);
 				else
 				{
 					PiazoCouter = 0;
-					sprintf(str, "$an#");
+					sprintf(str, "$an#\r\n");
 					HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 50);	
 										
 					//  HAL_UART_Transmit(&huart4,(uint8_t *)str,strlen(str),50);
@@ -2479,7 +2482,7 @@ ChipSelect(ChipSelectNumber, LOW);
 
 								
 																//write to lcd 
-						sprintf(str, "$F0#"); 	//pulse remaining 0
+						sprintf(str, "$F0#\r\n");  	//pulse remaining 0
 						HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 50);		
 						//	MsCounter=0;
 //	--			MotorRun=0;	
@@ -2579,9 +2582,9 @@ Counter = 0;
 
 			while (1)
 			{
-				sprintf(str, "$F0#"); 	//pulse remaining 0
+				sprintf(str, "$F0#\r\n");  	//pulse remaining 0
 				HAL_UART_Transmit(&huart1, (uint8_t*)str, strlen(str), 50);
-				HAL_Delay(5000);
+				HAL_Delay(10000);
 			}
 		}
 			
@@ -2671,7 +2674,7 @@ Counter = 0;
 					}
 					else 
 					{
-						sprintf(str, "$zAM Disconnected#");
+						sprintf(str, "$zAM Disconnected#\r\n");
 						HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 50);	
 					}	
 					//	}
