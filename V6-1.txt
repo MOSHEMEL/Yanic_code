@@ -1,0 +1,184 @@
+Configuration	V6-1
+STM32CubeMX 	5.2.1
+Date	06/30/2019
+MCU	STM32F072RBTx
+
+
+
+PERIPHERALS	MODES	FUNCTIONS	PINS
+ADC	IN10	ADC_IN10	PC0
+ADC	IN11	ADC_IN11	PC1
+DAC	DAC_OUT1	DAC_OUT1	PA4
+RCC	Crystal/Ceramic Resonator	RCC_OSC_IN	PF0-OSC_IN
+RCC	Crystal/Ceramic Resonator	RCC_OSC_OUT	PF1-OSC_OUT
+RTC	Activate RTC Clock Source	RTC_VS_RTC_Activate	VP_RTC_VS_RTC_Activate
+SPI1	Full-Duplex Master	SPI1_MISO	PB4
+SPI1	Full-Duplex Master	SPI1_MOSI	PB5
+SPI1	Full-Duplex Master	SPI1_SCK	PB3
+SYS	Serial_Wire	SYS_SWCLK	PA14
+SYS	Serial_Wire	SYS_SWDIO	PA13
+SYS	SysTick	SYS_VS_Systick	VP_SYS_VS_Systick
+TIM2	Internal Clock	TIM2_VS_ClockSourceINT	VP_TIM2_VS_ClockSourceINT
+TIM2	PWM Generation CH1	TIM2_CH1	PA5
+TIM2	PWM Generation CH4	TIM2_CH4	PB11
+TIM3	Internal Clock	TIM3_VS_ClockSourceINT	VP_TIM3_VS_ClockSourceINT
+TIM3	PWM Generation CH3	TIM3_CH3	PC8
+TIM3	PWM Generation CH4	TIM3_CH4	PC9
+TIM15	Internal Clock	TIM15_VS_ClockSourceINT	VP_TIM15_VS_ClockSourceINT
+TIM15	PWM Input on CH2	TIM15_CH2	PB15
+USART1	Asynchronous	USART1_RX	PA10
+USART1	Asynchronous	USART1_TX	PA9
+USART2	Asynchronous	USART2_RX	PA3
+USART2	Asynchronous	USART2_TX	PA2
+USART4	Asynchronous	USART4_RX	PC11
+USART4	Asynchronous	USART4_TX	PC10
+
+
+
+Pin Nb	PINs	FUNCTIONs	LABELs
+2	PC13	GPIO_Input	Btm_Counter
+5	PF0-OSC_IN	RCC_OSC_IN	
+6	PF1-OSC_OUT	RCC_OSC_OUT	
+8	PC0	ADC_IN10	
+9	PC1	GPIO_Analog ADC_IN11	
+10	PC2	GPIO_Input	CoverClose
+11	PC3	GPIO_Input	
+14	PA0	GPIO_Output	Buzzer
+15	PA1	GPIO_Input	Btm_SW
+16	PA2	USART2_TX	
+17	PA3	USART2_RX	
+20	PA4	DAC_OUT1	
+21	PA5	TIM2_CH1	
+23	PA7	GPIO_Analog	ADC_IN7
+24	PC4	GPIO_Output	
+25	PC5	GPIO_Output	
+27	PB1	GPIO_EXTI1	
+28	PB2	GPIO_EXTI2	
+30	PB11	TIM2_CH4	
+33	PB12	EVENTOUT	PiazoCouter
+34	PB13	GPIO_Input	Btm_Frequemcy
+35	PB14	GPIO_EXTI14	IntPulse
+36	PB15	TIM15_CH2	
+39	PC8	TIM3_CH3	MOTOR
+40	PC9	TIM3_CH4	
+41	PA8	GPIO_Output	I03
+42	PA9	USART1_TX	
+43	PA10	USART1_RX	
+44	PA11	GPIO_EXTI11	PulseCounter
+45	PA12	GPIO_EXTI12	
+46	PA13	SYS_SWDIO	TMS
+49	PA14	SYS_SWCLK	
+50	PA15	GPIO_Output	IO1
+51	PC10	USART4_TX	
+52	PC11	USART4_RX	
+53	PC12	GPIO_Output	
+54	PD2	GPIO_Output	
+55	PB3	SPI1_SCK	
+56	PB4	SPI1_MISO	
+57	PB5	SPI1_MOSI	
+58	PB6*	I2C1_SCL	
+59	PB7*	I2C1_SDA	
+61	PB8	GPIO_Output	CS3
+62	PB9	GPIO_Output	CS4
+PERIPHERALS	MODES	FUNCTIONS	PINS
+ADC	IN10	ADC_IN10	PC0
+ADC	IN11	ADC_IN11	PC1
+DAC	DAC_OUT1	DAC_OUT1	PA4
+RCC	Crystal/Ceramic Resonator	RCC_OSC_IN	PF0-OSC_IN
+RCC	Crystal/Ceramic Resonator	RCC_OSC_OUT	PF1-OSC_OUT
+RTC	Activate RTC Clock Source	RTC_VS_RTC_Activate	VP_RTC_VS_RTC_Activate
+SPI1	Full-Duplex Master	SPI1_MISO	PB4
+SPI1	Full-Duplex Master	SPI1_MOSI	PB5
+SPI1	Full-Duplex Master	SPI1_SCK	PB3
+SYS	Serial_Wire	SYS_SWCLK	PA14
+SYS	Serial_Wire	SYS_SWDIO	PA13
+SYS	SysTick	SYS_VS_Systick	VP_SYS_VS_Systick
+TIM2	Internal Clock	TIM2_VS_ClockSourceINT	VP_TIM2_VS_ClockSourceINT
+TIM2	PWM Generation CH1	TIM2_CH1	PA5
+TIM2	PWM Generation CH4	TIM2_CH4	PB11
+TIM3	Internal Clock	TIM3_VS_ClockSourceINT	VP_TIM3_VS_ClockSourceINT
+TIM3	PWM Generation CH3	TIM3_CH3	PC8
+TIM3	PWM Generation CH4	TIM3_CH4	PC9
+TIM15	Internal Clock	TIM15_VS_ClockSourceINT	VP_TIM15_VS_ClockSourceINT
+TIM15	PWM Input on CH2	TIM15_CH2	PB15
+USART1	Asynchronous	USART1_RX	PA10
+USART1	Asynchronous	USART1_TX	PA9
+USART2	Asynchronous	USART2_RX	PA3
+USART2	Asynchronous	USART2_TX	PA2
+USART4	Asynchronous	USART4_RX	PC11
+USART4	Asynchronous	USART4_TX	PC10
+
+
+
+Pin Nb	PINs	FUNCTIONs	LABELs
+2	PC13	GPIO_Input	Btm_Counter
+5	PF0-OSC_IN	RCC_OSC_IN	
+6	PF1-OSC_OUT	RCC_OSC_OUT	
+8	PC0	ADC_IN10	
+9	PC1	GPIO_Analog ADC_IN11	
+10	PC2	GPIO_Input	CoverClose
+11	PC3	GPIO_Input	
+14	PA0	GPIO_Output	Buzzer
+15	PA1	GPIO_Input	Btm_SW
+16	PA2	USART2_TX	
+17	PA3	USART2_RX	
+20	PA4	DAC_OUT1	
+21	PA5	TIM2_CH1	
+23	PA7	GPIO_Analog	ADC_IN7
+24	PC4	GPIO_Output	
+25	PC5	GPIO_Output	
+27	PB1	GPIO_EXTI1	
+28	PB2	GPIO_EXTI2	
+30	PB11	TIM2_CH4	
+33	PB12	EVENTOUT	PiazoCouter
+34	PB13	GPIO_Input	Btm_Frequemcy
+35	PB14	GPIO_EXTI14	IntPulse
+36	PB15	TIM15_CH2	
+39	PC8	TIM3_CH3	MOTOR
+40	PC9	TIM3_CH4	
+41	PA8	GPIO_Output	I03
+42	PA9	USART1_TX	
+43	PA10	USART1_RX	
+44	PA11	GPIO_EXTI11	PulseCounter
+45	PA12	GPIO_EXTI12	
+46	PA13	SYS_SWDIO	TMS
+49	PA14	SYS_SWCLK	
+50	PA15	GPIO_Output	IO1
+51	PC10	USART4_TX	
+52	PC11	USART4_RX	
+53	PC12	GPIO_Output	
+54	PD2	GPIO_Output	
+55	PB3	SPI1_SCK	
+56	PB4	SPI1_MISO	
+57	PB5	SPI1_MOSI	
+58	PB6*	I2C1_SCL	
+59	PB7*	I2C1_SDA	
+61	PB8	GPIO_Output	CS3
+62	PB9	GPIO_Output	CS4
+
+
+
+SOFTWARE PROJECT
+
+Project Settings : 
+Project Name : V6-1
+Project Folder : C:\project6\Armenta\V6-1
+Toolchain / IDE : MDK-ARM V5
+Firmware Package Name and Version : STM32Cube FW_F0 V1.10.1
+
+
+Code Generation Settings : 
+STM32Cube Firmware Library Package : Copy all used libraries into the project folder
+Generate peripheral initialization as a pair of '.c/.h' files per peripheral : No
+Backup previously generated files when re-generating : No
+Delete previously generated files when not re-generated : Yes
+Set all free pins as analog (to optimize the power consumption) : No
+
+
+Toolchains Settings : 
+Compiler Optimizations : 
+
+
+
+
+
