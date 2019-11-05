@@ -52,6 +52,7 @@
 #define ADC_Battery 1
 
 #define ADC_Presure_27_bar 700//  need to be 847 , we done factor  with adi
+#define ADC_Pressure_20_bar 660
 
 #define  sw_ver   "Armenta ver 8.0.3b 07/09/19"  // dd/mm/yy  // b - beta a-alpha
 
@@ -1687,7 +1688,7 @@ HAL_Delay(2500);
 	*/
 	
 	
-	  				ReadFromMemoryCounter(CS_Applicator);
+	ReadFromMemoryCounter(CS_Applicator);
 	ReadFromMemoryCounter(CS_Router);
 	ReadFromMemoryCounter(CS_Mcu);
 						
@@ -1762,9 +1763,11 @@ HAL_Delay(2500);
 	else
 	{
 		sprintf(str, "$pLOW#");     // low
-				MotorCommand(0);
-		MotorRun = 0;
-						
+		if(adc[ADC_Presure] <= ADC_Pressure_20_bar)
+		{
+			MotorCommand(0); // Edi and sela wanted a check only on start of work
+			MotorRun = 0;
+		}					
 	}
 	//	sprintf(str,"\r\n$p%d#\r\n",adc[ADC_Presure]);
 	//	HAL_GPIO_TogglePin(GPIOA,GPIO_PIN_4);
@@ -1842,7 +1845,7 @@ HAL_Delay(2500);
 				//HAL_UART_Transmit(&huart4,(uint8_t *)str,strlen(str),100);
 				HAL_UART_Transmit(&huart1, (uint8_t *)str, strlen(str), 50);
 						
-			if ((c % 200) == 0)  
+			if ((c % 100) == 0)  
 			{		
 
 			
@@ -1889,8 +1892,11 @@ HAL_Delay(2500);
 				else
 				{
 					sprintf(str, "$pLOW#\r\n");       // low
-							MotorCommand(0);
-					MotorRun = 0;
+					if(adc[ADC_Presure] <= ADC_Pressure_20_bar)
+					{
+						MotorCommand(0);  // Edi and sela wanted a check only on start of work
+						MotorRun = 0;
+					}	
 						
 				}
 				//	sprintf(str,"\r\n$p%d#\r\n",adc[ADC_Presure]);
@@ -1936,7 +1942,7 @@ HAL_Delay(2500);
 			
 			sprintf(str, "ADC[pressure] : %d\r\n", adc[ADC_Presure]);	
 			HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);	
-			if ((c % 100) == 0)  
+			if ((c % 1000) == 0)  
 			{		
 				//	sprintf(str,"$b%d#",adc[ADC_Battery]);
 					sprintf(str, "$t%d#\r\n", (int)ApplicatorCounterPercent);	
@@ -1990,7 +1996,7 @@ HAL_Delay(2500);
 	
 
 						// presure =0.0383*ADC[0]-4.981
-						if(adc[ADC_Presure] >= ADC_Presure_27_bar)  // presure to low
+			if(adc[ADC_Presure] >= ADC_Presure_27_bar)  // presure to low
 			{
 				//		sprintf(str,"\r\nPr %d [0.k] Battery %4.2f   Counter.Head %4.2f", adc[ADC_Presure], BatteryPercent,ApplicatorCounterPercent );
 			}
@@ -2236,27 +2242,11 @@ HAL_Delay(2500);
 		//		if (BtmFireCounterPressed >=5)
 			
 					//IgnoreButtonDelay++;
-					if(MotorRun == 0)
+				if(MotorRun == 0)
 				{
-					
-
-					//	ReadFromMemoryCounter(CS_Applicator);
-						// check memory counter
-						//   sprintf(aTxBuffer,"\r\n >>> \r\n t,m[%ld] mc[%ld] mc-temp_memory[%ld] \r\n",MsCounter,MemoryCounter[CS_Applicator],( MemoryCounter[CS_Applicator]-MsCounter)  );
-						 //   HAL_UART_Transmit(&huart4, (uint8_t*)aTxBuffer, strlen((char*)aTxBuffer), 50);
-									MsCounter = 0;
+					MsCounter = 0;
 					sprintf(str, "\r\nStart  motor write to %ld\r\n", MsCounter);
-					HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);	
-					//	if (MemoryCounter[CS_Applicator]>0)
-					//	{
-					
-					
-					// checks of mandatories parameters to run motor .
-					
-					
-					
-					
-					
+					HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);				
 					if(CheckApplicator() == 1) 
 					{	
 
@@ -2283,12 +2273,12 @@ HAL_Delay(2500);
 					MotorCommand(0);	
 					MotorRun = 0;
 					HAL_Delay(50);
-				
+					sprintf(str, "\r\nclose  motor write to %ld\r\n", MsCounter);
+
 					MemoryCounter[CS_Applicator] = MsCounter;
 					MemoryCounter[CS_Router] = MsCounter;
 					MemoryCounter[CS_Mcu] = MsCounter;
 					
-					sprintf(str, "\r\nclose  motor write to %ld\r\n", MsCounter);
 					HAL_UART_Transmit(&huart4, (uint8_t *)str, strlen(str), 50);
 	
 					
@@ -2326,21 +2316,11 @@ HAL_Delay(2500);
 					}
 					
 					temp_memory = MemoryCounter[CS_Applicator];      // save last  total memory value
-					  MsCounter = 0;
-					
-					
-
-					
-					// set memory
-
-			//	HAL_Delay(800);
+					MsCounter = 0;
 				}
 
-				//	BtmFireCounterPressed=0;
-				
 			
-			
-					Btm_SW = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+				Btm_SW = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
 				if (Btm_SW == 1)
 				{
 					HAL_Delay(250);
